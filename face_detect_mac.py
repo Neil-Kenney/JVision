@@ -2,6 +2,13 @@ import cv2
 import mediapipe as mp
 import time
 import numpy as np
+from PromptWindow import PromptWindow
+
+pw = PromptWindow()
+breakMinutes, awayMinutes = pw.get_settings()
+if breakMinutes is None or awayMinutes is None:
+    print("Configuration cancelled. Exiting.")
+    exit(0)
 
 # -----------------------------
 # Mediapipe Setup
@@ -16,7 +23,7 @@ face_detection = mp_face.FaceDetection(
 # Camera
 # -----------------------------
 # cap = cv2.VideoCapture(0)
-cap = cv2.VideoCapture(1, cv2.CAP_AVFOUNDATION)
+cap = cv2.VideoCapture(0, cv2.CAP_AVFOUNDATION)
 if not cap.isOpened():
     raise RuntimeError("Camera did not open. Check permissions and close apps.")
 
@@ -39,14 +46,14 @@ absent_frames = 0
 total_present_seconds = 0.0     # accumulated time present
 total_away_seconds = 0.0        # accumulated time away
 last_frame_time = time.time()   # for dt accumulation
-AWAY_SECONDS_THRESHOLD = 5
+AWAY_SECONDS_THRESHOLD = awayMinutes * 60
 
 # -----------------------------
 # Break popup state
 # -----------------------------
 BREAK_WINDOW = "Take a Break"
-BREAK_SECONDS = 20          # show popup once total seconds reach this
-break_active = False        # whether popup is currently showing
+BREAK_SECONDS = breakMinutes * 60 # show popup once total seconds reach this
+break_active = False              # whether popup is currently showing
 
 #DIFFERENT START
 # break_window = BreakWindow()
@@ -138,11 +145,6 @@ while True:
         to_display = popup_full
         #DIFFERENT END
 
-        # cv2.imshow(BREAK_WINDOW, popup)
-        # if not break_window.active():
-        #     break_window.show()
-        #     break_window.root.update()
-
         if face_present:
             if absent_frames >= BUFFER_FRAMES:
                 face_present = False
@@ -159,12 +161,9 @@ while True:
             absent_frames += 1
             present_frames = 0
 
-        if total_away_seconds >= 5: # auto-dismiss break after 5 seconds away
+        if total_away_seconds >= AWAY_SECONDS_THRESHOLD:
             break_active = False
-            #DIFFERENT START
-            # cv2.destroyWindow(BREAK_WINDOW)
-            # break_window.close()
-            #DIFFERENT END
+            cv2.destroyWindow(BREAK_WINDOW)
             total_present_seconds = 0.0
 
 
@@ -185,17 +184,8 @@ while True:
             absent_frames += 1
             present_frames = 0
         
-        if total_away_seconds >= 5: # todo: make const AWAY_SECONDS_THRESHOLD
+        if total_away_seconds >= AWAY_SECONDS_THRESHOLD:
             total_present_seconds = 0.0
-    
-    
-    # ============================================================
-    # AUTO-DISMISS BREAK WINDOW IF USER LEAVES
-    # ============================================================
-    # if break_active and not face_present:
-    #     break_active = False
-    #     cv2.destroyWindow(BREAK_WINDOW)
-
 
     # ============================================================
     # BREAK POPUP TRIGGER (TOTAL TIME)
