@@ -1,0 +1,155 @@
+
+------------------------------------------------------------
+J_Viision_Hack Setup Guide (macOS)
+------------------------------------------------------------
+
+This guide explains how to set up a virtual environment to run
+face_dectect.py using Python 3.10–3.11, MediaPipe, OpenCV, and Tkinter on macOS.
+
+------------------------------------------------------------
+REQUIREMENTS
+------------------------------------------------------------
+
+    - macOS
+    - Python 3.10–3.11
+
+Check your Python version:
+
+    python3 --version
+
+If you are not running Python 3.10–3.11, install it from:
+    https://www.python.org/downloads/mac-osx/
+
+------------------------------------------------------------
+VERIFY TKINTER WORKS
+------------------------------------------------------------
+
+Before creating the virtual environment, confirm Tkinter works:
+
+    python3 -m tkinter
+
+You should see a small demo window.
+
+Note:
+    You may see a macOS warning about
+    “the system version of Tk is deprecated.”
+    This is normal and can safely be ignored.
+
+(Optional) Silence the warning:
+
+    export TK_SILENCE_DEPRECATION=1
+
+------------------------------------------------------------
+FIRST-TIME SETUP
+------------------------------------------------------------
+
+Navigate to the project directory:
+
+    cd ~/J_Viision_Hack
+    (adjust if your folder is elsewhere)
+
+Create and activate the virtual environment:
+
+    python3 -m venv .venv
+    source .venv/bin/activate
+
+Upgrade pip:
+
+    python -m pip install --upgrade pip
+
+Install dependencies:
+
+    python -m pip install "numpy<2" "protobuf<5"
+    python -m pip install "opencv-contrib-python==4.9.0.80"
+    python -m pip install --no-deps "mediapipe==0.10.21"
+    python -m pip install attrs flatbuffers absl-py sounddevice sentencepiece matplotlib
+
+Run sanity checks (should print versions):
+
+    python -c "import cv2; print('opencv', cv2.__version__)"
+    python -c "import mediapipe as mp; print('mediapipe', mp.__version__)"
+    python -c "import tkinter; print('tkinter OK')"
+
+If all three imports succeed, setup is complete.
+
+------------------------------------------------------------
+RUNNING THE PROGRAM (EVERY TIME)
+------------------------------------------------------------
+
+    cd ~/J_Viision_Hack
+    source .venv/bin/activate
+    python face_dectect.py
+    deactivate
+
+------------------------------------------------------------
+CAMERA PERMISSIONS (REQUIRED)
+------------------------------------------------------------
+
+This application uses your webcam.
+
+Enable camera access for:
+
+    - Terminal (if running from Terminal)
+    - Visual Studio Code (if running inside VS Code)
+
+Go to:
+
+    System Settings -> Privacy & Security -> Camera
+
+------------------------------------------------------------
+TROUBLESHOOTING
+------------------------------------------------------------
+
+1) ModuleNotFoundError: cv2 (or other modules missing)
+
+    You likely forgot to activate the virtual environment.
+    Your terminal prompt should show:
+
+        (.venv)
+
+    If not, run:
+
+        source .venv/bin/activate
+
+------------------------------------------------------------
+
+2) AttributeError: mediapipe has no attribute solutions
+
+    This usually means the wrong version of MediaPipe was installed
+    or a local file is shadowing it.
+
+    Check for naming conflicts:
+
+        ls | grep mediapipe
+
+    Reinstall MediaPipe:
+
+        python -m pip uninstall -y mediapipe
+        python -m pip install --no-deps mediapipe==0.10.21
+
+------------------------------------------------------------
+
+3) Tkinter Window Does Not Appear
+
+    Step 1: Confirm Tkinter works independently:
+
+        python -m tkinter
+
+    Step 2: If using VS Code, ensure the correct interpreter is selected:
+
+        - Press Cmd + Shift + P
+        - Select "Python: Select Interpreter"
+        - Choose:
+          .../J_Viision_Hack/.venv/bin/python
+
+    Step 3: Ensure camera permissions are enabled.
+
+------------------------------------------------------------
+NOTES
+------------------------------------------------------------
+
+    - Always activate the virtual environment before running the program.
+    - Python 3.10 is recommended for best MediaPipe compatibility.
+    - Use opencv-contrib-python (not opencv-python).
+
+------------------------------------------------------------
