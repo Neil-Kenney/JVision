@@ -15,7 +15,7 @@ class PromptWindow:
             "Configuration",
             "How long before a break (minutes):",
             initialvalue=25.0,
-            minvalue=1.0,
+            minvalue=0.0,
             maxvalue=60.0
         )
         
@@ -26,7 +26,7 @@ class PromptWindow:
             "Configuration",
             "How long should your break last (minutes):",
             initialvalue=5.0,
-            minvalue=1.0,
+            minvalue=0.0,
             maxvalue=10.0
         )
         
