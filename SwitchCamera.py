@@ -18,10 +18,9 @@ class SwitchCamera:
         return available_cameras
 
     def choose_camera(self, debug=False):
-        """Display camera feed and allow user to switch with arrow keys, press Enter to confirm.
-        This handles multiple possible key codes for arrow keys across platforms.
+        """Display camera feed and allow user to switch with A/D keys, press Enter to confirm.
         """
-        print("Camera Selection: Use LEFT/RIGHT arrows to switch, ENTER to confirm, ESC to cancel")
+        print("Camera Selection: Use A/D keys to switch, ENTER to confirm, ESC to cancel")
 
         while True:
             ret, frame = self.cap.read()
@@ -36,8 +35,7 @@ class SwitchCamera:
                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
 
             cv2.imshow("Camera Selection", frame)
-
-            # key = cv2.waitKey(30)
+            
             key = cv2.waitKey(30) & 0xFF
             if debug:
                 print(f"key={key}")
