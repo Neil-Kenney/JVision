@@ -32,30 +32,29 @@ class SwitchCamera:
             status_text = f"Camera {camera_id} ({self.curr_camera_index + 1}/{len(self.available_cameras)})"
             cv2.putText(frame, status_text, (30, 50),
                        cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
-            cv2.putText(frame, "LEFT/RIGHT arrows | ENTER to confirm | ESC to cancel", (30, 100),
+            cv2.putText(frame, "Use A/D keys to switch | ENTER to confirm | ESC to cancel", (30, 100),
                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
 
             cv2.imshow("Camera Selection", frame)
 
-            key = cv2.waitKey(30)
+            # key = cv2.waitKey(30)
+            key = cv2.waitKey(30) & 0xFF
+            if debug:
+                print(f"key={key}")
+
             key8 = key & 0xFF
             if debug:
                 print(f"raw key={key} key8={key8}")
 
-            # Common key codes for LEFT across platforms
-            left_codes = {81, 2424832, 65361}
-            # Common key codes for RIGHT across platforms
-            right_codes = {83, 2555904, 65363}
-
-            # LEFT arrow: previous camera
-            if key in left_codes or key8 in left_codes:
+            # A: previous camera
+            if key in (ord('a'), ord('A')):
                 self.curr_camera_index = (self.curr_camera_index - 1) % len(self.available_cameras)
                 self.cap.release()
                 self.cap = cv2.VideoCapture(self.available_cameras[self.curr_camera_index], cv2.CAP_AVFOUNDATION)
                 print(f"Switched to camera {self.available_cameras[self.curr_camera_index]}")
 
-            # RIGHT arrow: next camera
-            elif key in right_codes or key8 in right_codes:
+            # D: next camera
+            elif key in (ord('d'), ord('D')):
                 self.curr_camera_index = (self.curr_camera_index + 1) % len(self.available_cameras)
                 self.cap.release()
                 self.cap = cv2.VideoCapture(self.available_cameras[self.curr_camera_index], cv2.CAP_AVFOUNDATION)
