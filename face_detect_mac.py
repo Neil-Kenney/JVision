@@ -103,9 +103,9 @@ while True:
     if break_active:
         #DIFFERENT START
         # --- progress numbers ---
-        progress = total_away_seconds / GOAL_AWAY_SECONDS
+        progress = total_away_seconds / AWAY_SECONDS_THRESHOLD
         progress_clamped = max(0.0, min(1.0, progress))
-        remaining = max(0.0, GOAL_AWAY_SECONDS - total_away_seconds)
+        remaining = max(0.0, AWAY_SECONDS_THRESHOLD - total_away_seconds)
         # --- progress bar line ---
         bar_x, bar_y, bar_w, bar_h = 35, 230, 450, 18
 
