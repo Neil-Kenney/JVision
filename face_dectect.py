@@ -3,7 +3,6 @@ import mediapipe as mp
 import subprocess
 import time
 import numpy as np
-import tkinter as tk
 from BreakWindow import BreakWindow
 
 # -----------------------------

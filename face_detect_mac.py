@@ -1,10 +1,7 @@
 import cv2
 import mediapipe as mp
-import subprocess
 import time
 import numpy as np
-import tkinter as tk
-from BreakWindow import BreakWindow
 
 # -----------------------------
 # Mediapipe Setup
@@ -202,10 +199,6 @@ while True:
     # ESC quits program
     if key == 27:
         break
-
-    # B dismisses break popup (if active)
-    # if not break_active and (key == ord('b') or key == ord('B')):
-    #     cv2.destroyWindow(BREAK_WINDOW)
 
 cap.release()
 cv2.destroyAllWindows()
