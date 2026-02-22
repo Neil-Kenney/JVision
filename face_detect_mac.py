@@ -3,6 +3,7 @@ import mediapipe as mp
 import time
 import numpy as np
 from PromptWindow import PromptWindow
+from SwitchCamera import SwitchCamera
 
 pw = PromptWindow()
 breakMinutes, awayMinutes = pw.get_settings()
@@ -22,8 +23,8 @@ face_detection = mp_face.FaceDetection(
 # -----------------------------
 # Camera
 # -----------------------------
-# cap = cv2.VideoCapture(0)
-cap = cv2.VideoCapture(0, cv2.CAP_AVFOUNDATION)
+sw = SwitchCamera()
+cap = sw.choose_camera()
 if not cap.isOpened():
     raise RuntimeError("Camera did not open. Check permissions and close apps.")
 
