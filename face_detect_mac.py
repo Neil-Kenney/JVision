@@ -103,7 +103,23 @@ while True:
         bar_x, bar_y, bar_w, bar_h = 35, 230, 450, 18
 
         # Create a simple "popup" image
-        popup = 255 * (np.ones((280, 520, 3), dtype=np.uint8))
+        # popup = 255 * (np.ones((280, 520, 3), dtype=np.uint8))
+        # Get screen size from camera frame
+        screen_h, screen_w = frame.shape[:2]
+
+        # Create dimmed background (looks nicer than black)
+        popup_full = (frame * 0.2).astype(np.uint8)
+
+        # Define popup size
+        popup_h = 320
+        popup_w = 520
+
+        # Compute centered coordinates
+        start_y = (screen_h - popup_h) // 2
+        start_x = (screen_w - popup_w) // 2
+
+        # Create white popup card
+        popup = 255 * np.ones((popup_h, popup_w, 3), dtype=np.uint8)
 
         cv2.putText(popup, "Time for a break!", (35, 80),
                     cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 0), 3)
@@ -115,7 +131,11 @@ while True:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2)
         draw_progress_bar(popup, bar_x, bar_y, bar_w, bar_h, progress_clamped)
         
-        to_display = popup
+        # Paste popup into center of fullscreen background
+        popup_full[start_y:start_y+popup_h,
+                start_x:start_x+popup_w] = popup
+
+        to_display = popup_full
         #DIFFERENT END
 
         # cv2.imshow(BREAK_WINDOW, popup)
