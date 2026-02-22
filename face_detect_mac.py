@@ -99,20 +99,21 @@ while True:
         progress = total_away_seconds / GOAL_AWAY_SECONDS
         progress_clamped = max(0.0, min(1.0, progress))
         remaining = max(0.0, GOAL_AWAY_SECONDS - total_away_seconds)
+        # --- progress bar line ---
+        bar_x, bar_y, bar_w, bar_h = 35, 230, 450, 18
 
         # Create a simple "popup" image
-        popup = 255 * (np.ones((220, 520, 3), dtype=np.uint8))
+        popup = 255 * (np.ones((280, 520, 3), dtype=np.uint8))
 
         cv2.putText(popup, "Time for a break!", (35, 80),
                     cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 0, 0), 3)
         cv2.putText(popup, "Step away from the camera.", (35, 130),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 0), 2)
-        # cv2.putText(popup, "Press B to dismiss.", (35, 180),
-        #             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2)
-        cv2.putText(popup, f"Away: {total_away_seconds:0.1f}s", (35, 175),
+        cv2.putText(popup, f"Away: {total_away_seconds:0.1f}s", (35, 180),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2)
         cv2.putText(popup, f"Remaining: {remaining:0.1f}s", (35, 205),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 2)
+        draw_progress_bar(popup, bar_x, bar_y, bar_w, bar_h, progress_clamped)
         
         to_display = popup
         #DIFFERENT END
