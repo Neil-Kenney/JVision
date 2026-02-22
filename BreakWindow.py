@@ -5,7 +5,7 @@ class BreakWindow:
         self.root = None
         self.isActive = False
 
-    def show(self):
+    def show(self, text):
         if self.root is not None:
             return
 
@@ -16,7 +16,7 @@ class BreakWindow:
         self.isActive = True
 
         tk.Label(self.root,
-                text="Time for a break!",
+                text=text,
                 font=("Helvetica", 40)).pack(expand=True)
 
     def close(self):
