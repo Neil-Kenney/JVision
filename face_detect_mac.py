@@ -55,9 +55,6 @@ BREAK_WINDOW = "Take a Break"
 BREAK_SECONDS = breakMinutes * 60 # show popup once total seconds reach this
 break_active = False              # whether popup is currently showing
 
-#DIFFERENT START
-# break_window = BreakWindow()
-
 GOAL_AWAY_SECONDS = 5.0  # how long they must be away to dismiss break
 
 def draw_progress_bar(img, x, y, w, h, frac):
@@ -68,24 +65,16 @@ def draw_progress_bar(img, x, y, w, h, frac):
     fill_w = int(w * frac)
     if fill_w > 0:
         cv2.rectangle(img, (x, y), (x + fill_w, y + h), (0, 0, 0), -1)
-#DIFFERENT END
 
 # -----------------------------
 # Main Loop
 # -----------------------------
 while True:
-    #DIFFERENT START
-    # ret, frame = cap.read()
-    # rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-    # if not ret: # error check
-    #     break
     ret, frame = cap.read()
     if not ret or frame is None:
         continue  # skip until we get a real frame
 
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    #DIFFERENT END
 
     face_results = face_detection.process(rgb)
 
@@ -101,7 +90,6 @@ while True:
     face_present = bool(face_results.detections)
 
     if break_active:
-        #DIFFERENT START
         # --- progress numbers ---
         progress = total_away_seconds / AWAY_SECONDS_THRESHOLD
         progress_clamped = max(0.0, min(1.0, progress))
@@ -109,8 +97,6 @@ while True:
         # --- progress bar line ---
         bar_x, bar_y, bar_w, bar_h = 35, 230, 450, 18
 
-        # Create a simple "popup" image
-        # popup = 255 * (np.ones((280, 520, 3), dtype=np.uint8))
         # Get screen size from camera frame
         screen_h, screen_w = frame.shape[:2]
 
@@ -143,7 +129,6 @@ while True:
                 start_x:start_x+popup_w] = popup
 
         to_display = popup_full
-        #DIFFERENT END
 
         if face_present:
             if absent_frames >= BUFFER_FRAMES:
@@ -153,19 +138,13 @@ while True:
         else:
             if present_frames >= BUFFER_FRAMES:
                 face_present = True
-                #DIFFERENT START
-                # total_away_seconds = 0.0  # reset away timer if we just 
-                                          # transitioned to away
-                #DIFFERENT END
             total_away_seconds += dt
             absent_frames += 1
             present_frames = 0
 
         if total_away_seconds >= AWAY_SECONDS_THRESHOLD:
             break_active = False
-            cv2.destroyWindow(BREAK_WINDOW)
             total_present_seconds = 0.0
-
 
     else: # break_active = false
         to_display = frame
@@ -192,11 +171,6 @@ while True:
     # ============================================================
     if total_present_seconds >= BREAK_SECONDS:
         break_active = True
-        #DIFFERENT START
-        # cv2.namedWindow(BREAK_WINDOW, cv2.WINDOW_AUTOSIZE)
-        # break_window.show()
-        # break_window.root.update()
-        #DIFFERENT END
 
     # ============================================================
     # FACE DETECTION + MOVEMENT
@@ -234,22 +208,13 @@ while True:
     cv2.putText(frame, f"Total: {total_present_seconds:0.1f}s", (30, 110),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
     
-    #DIFFERENT START
-    # cv2.imshow("Face + Hand + Gestures", frame)
     cv2.imshow("Face + Hand + Gestures", to_display)
-    #DIFFERENT END
 
     key = cv2.waitKey(1) & 0xFF
 
     # ESC quits program
     if key == 27:
         break
-
-#DIFFERENT START
-# B dismisses break popup (if active)
-# if not break_active and (key == ord('b') or key == ord('B')):
-#     cv2.destroyWindow(BREAK_WINDOW)
-#DIFFERENT END
 
 cap.release()
 cv2.destroyAllWindows()
